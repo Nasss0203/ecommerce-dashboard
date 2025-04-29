@@ -38,6 +38,7 @@ import {
 	useReactTable,
 } from "@tanstack/react-table";
 import React, { useEffect, useMemo } from "react";
+import { FaRegTrashAlt } from "react-icons/fa";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { IoSettingsSharp } from "react-icons/io5";
 import { MdModeEdit } from "react-icons/md";
@@ -174,7 +175,7 @@ const TablePublishDnD = () => {
 								</AlertDialog>
 								<AlertDialog>
 									<AlertDialogTrigger className='flex items-center gap-5'>
-										<IoSettingsSharp />
+										<FaRegTrashAlt />
 										Delete
 									</AlertDialogTrigger>
 									<AlertDialogContent>

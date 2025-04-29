@@ -36,7 +36,7 @@ function TableDnD() {
 	const dispatch = useAppDispatch();
 	const listProduct = useAppSelector((state) => state.product.listProduct);
 
-	const data = listProduct.data.data || [];
+	const data = listProduct?.data?.data || [];
 	console.log(" data~", data);
 
 	useEffect(() => {

@@ -1,5 +1,5 @@
 import { createNewProduct } from "@/api/product.api";
-import { uploadFile } from "@/api/upload.api";
+import { uploadFile, uploadMultipleFile } from "@/api/upload.api";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { getAllBrand } from "@/redux/slice/brand.slice";
 import { getAllCategory } from "@/redux/slice/category.slice";
@@ -46,6 +46,8 @@ const DialogProduct = () => {
 	const [uploadProgress, setUploadProgress] = useState(0);
 	const [fileUpload, setFileUpload] = useState<File | null>(null);
 	const srcFile = fileUpload ? URL.createObjectURL(fileUpload) : undefined;
+	const [multipleFiles, setMultipleFiles] = useState<File[]>([]);
+	const [previews, setPreviews] = useState<string[]>([]);
 
 	const dispatch = useAppDispatch();
 	const categorySelector = useAppSelector(
@@ -72,6 +74,7 @@ const DialogProduct = () => {
 			product_thumb: "",
 			product_price: 0,
 			product_quantity: 0,
+			product_images: [""],
 			product_category: "",
 			product_brand: "",
 			product_auth: _id,
@@ -91,6 +94,29 @@ const DialogProduct = () => {
 
 		if (e.target.files && e.target.files[0]) {
 			setFileUpload(e.target.files[0]);
+		}
+	};
+
+	const handleMultipleFileChange = (
+		e: React.ChangeEvent<HTMLInputElement>,
+	) => {
+		const files = Array.from(e.target.files || []);
+		if (files.length > 0) {
+			setMultipleFiles(files);
+
+			const fileReaders = files.map(
+				(file) =>
+					new Promise<string>((resolve) => {
+						const reader = new FileReader();
+						reader.onloadend = () =>
+							resolve(reader.result as string);
+						reader.readAsDataURL(file);
+					}),
+			);
+
+			Promise.all(fileReaders).then((results) => {
+				setPreviews(results);
+			});
 		}
 	};
 
@@ -115,13 +141,31 @@ const DialogProduct = () => {
 				values.product_thumb = uploadResponse?.data?.thumb_url;
 			}
 
+			if (multipleFiles.length > 0) {
+				const uploadResponse = await uploadMultipleFile(
+					multipleFiles,
+					setUploadProgress,
+				);
+
+				if (Array.isArray(uploadResponse?.data)) {
+					values.product_images = uploadResponse.data.map(
+						(file: any) => file.thumb_url,
+					);
+				} else {
+					console.warn(
+						"Invalid response format from uploadMultipleFile",
+					);
+				}
+			}
+
 			const response = await createNewProduct(values);
-			console.log("response~", response);
 
 			if (response) {
 				form.reset();
 				setFileUpload(null);
 				setPreview(null);
+				setMultipleFiles([]);
+				setPreviews([]);
 			}
 			toast.success("Product created successfully");
 		} catch (error) {
@@ -136,7 +180,7 @@ const DialogProduct = () => {
 				<Button variant='default'>Add product</Button>
 			</DialogTrigger>
 			<Form {...form}>
-				<DialogContent className='h-screen mt-5 mb-7 lg:max-w-7xl'>
+				<DialogContent className='h-screen mt-5 mb-7 lg:max-w-7xl 2xl:max-w-[1636px]'>
 					<DialogHeader>
 						<DialogTitle>add product</DialogTitle>
 						<DialogDescription>
@@ -383,6 +427,54 @@ const DialogProduct = () => {
 											{/* <AttributesForm
 										category={selectedCategory}
 									></AttributesForm> */}
+										</div>
+									</div>
+									<div className='p-5 bg-white rounded-md shadow dark:bg-neutral-700 h-[350px]'>
+										<h4 className='mb-2 text-base font-medium'>
+											Images
+										</h4>
+										<div>
+											<label
+												htmlFor='multiple-upload'
+												className='block mb-2 font-semibold'
+											>
+												Upload multiple images:
+											</label>
+
+											<input
+												id='multiple-upload'
+												type='file'
+												multiple
+												accept='image/*'
+												onChange={
+													handleMultipleFileChange
+												}
+												className='mb-4'
+											/>
+
+											{uploadProgress > 0 &&
+												uploadProgress < 100 && (
+													<div className='mb-4'>
+														Uploading:{" "}
+														{uploadProgress}%
+													</div>
+												)}
+
+											{/* Previews */}
+											{previews.length > 0 && (
+												<div className='flex flex-wrap gap-2'>
+													{previews.map(
+														(src, index) => (
+															<img
+																key={index}
+																src={src}
+																alt={`preview-${index}`}
+																className='object-cover w-20 h-20 border rounded'
+															/>
+														),
+													)}
+												</div>
+											)}
 										</div>
 									</div>
 								</div>
