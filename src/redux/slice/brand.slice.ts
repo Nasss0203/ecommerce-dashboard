@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export const getAllBrand = createAsyncThunk(
 	"brand/getAllBrand",
-	async (payload: any, thunkAPI) => {
+	async (payload: any) => {
 		const response = await findAllBrand(payload);
 		console.log(" response~", response);
 

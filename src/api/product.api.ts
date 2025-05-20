@@ -14,6 +14,7 @@ export const fetchAllProductsAPI = async () => {
 };
 
 export const createNewProduct = async (ProductController: IProduct) => {
+	console.log(" ProductController~", ProductController);
 	const { tokens } = getUserIdAndToken() || {};
 	const { refresh_token } = tokens || {};
 	try {

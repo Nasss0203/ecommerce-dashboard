@@ -8,11 +8,11 @@ const API_KEY_TINY = import.meta.env.VITE_API_KEY_TINY_MCE as string;
 const EditorTiny = () => {
 	const editorRef = useRef<TinyMCEEditor | null>(null);
 
-	const log = () => {
-		if (editorRef.current) {
-			console.log(editorRef.current.getContent());
-		}
-	};
+	// const log = () => {
+	// 	if (editorRef.current) {
+	// 		console.log(editorRef.current.getContent());
+	// 	}
+	// };
 
 	return (
 		<div className='w-full h-[400px]'>

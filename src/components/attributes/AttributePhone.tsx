@@ -12,11 +12,11 @@ import { FormControl, FormField, FormItem, FormLabel } from "../ui/form";
 import { ScrollArea } from "../ui/scroll-area";
 const AttributePhone = () => {
 	const { control } = useFormContext();
-	const [selectedRam, setSelectedRam] = useState<string>("");
-	const [selectedBrand, setSelectedBrand] = useState<string>("");
-	const [selectedScreen, setSelectedScreen] = useState<string>("");
-	const [selectedStorageCapacity, setSelectedStorageCapacity] =
-		useState<string>("");
+	const [_selectedRam, setSelectedRam] = useState<string>("");
+	// const [selectedBrand, setSelectedBrand] = useState<string>("");
+	// const [selectedScreen, setSelectedScreen] = useState<string>("");
+	// const [selectedStorageCapacity, setSelectedStorageCapacity] =
+	// 	useState<string>("");
 
 	return (
 		<>

@@ -1,5 +1,4 @@
 import {
-	Column,
 	ColumnDef,
 	flexRender,
 	getCoreRowModel,
@@ -7,7 +6,6 @@ import {
 	getPaginationRowModel,
 	getSortedRowModel,
 	PaginationState,
-	Table as TableTanstack,
 	useReactTable,
 } from "@tanstack/react-table";
 import { useEffect, useMemo, useState } from "react";
@@ -261,56 +259,56 @@ const TableListOrder = () => {
 	);
 };
 
-function Filter({
-	column,
-	table,
-}: {
-	column: Column<any, any>;
-	table: TableTanstack<any>;
-}) {
-	const firstValue = table
-		.getPreFilteredRowModel()
-		.flatRows[0]?.getValue(column.id);
+// function Filter({
+// 	column,
+// 	table,
+// }: {
+// 	column: Column<any, any>;
+// 	table: TableTanstack<any>;
+// }) {
+// 	const firstValue = table
+// 		.getPreFilteredRowModel()
+// 		.flatRows[0]?.getValue(column.id);
 
-	const columnFilterValue = column.getFilterValue();
+// 	const columnFilterValue = column.getFilterValue();
 
-	return typeof firstValue === "number" ? (
-		<div className='flex space-x-2' onClick={(e) => e.stopPropagation()}>
-			<input
-				type='number'
-				value={(columnFilterValue as [number, number])?.[0] ?? ""}
-				onChange={(e) =>
-					column.setFilterValue((old: [number, number]) => [
-						e.target.value,
-						old?.[1],
-					])
-				}
-				placeholder={`Min`}
-				className='w-24 border rounded shadow'
-			/>
-			<input
-				type='number'
-				value={(columnFilterValue as [number, number])?.[1] ?? ""}
-				onChange={(e) =>
-					column.setFilterValue((old: [number, number]) => [
-						old?.[0],
-						e.target.value,
-					])
-				}
-				placeholder={`Max`}
-				className='w-24 border rounded shadow'
-			/>
-		</div>
-	) : (
-		<input
-			className='border rounded shadow w-36'
-			onChange={(e) => column.setFilterValue(e.target.value)}
-			onClick={(e) => e.stopPropagation()}
-			placeholder={`Search...`}
-			type='text'
-			value={(columnFilterValue ?? "") as string}
-		/>
-	);
-}
+// 	return typeof firstValue === "number" ? (
+// 		<div className='flex space-x-2' onClick={(e) => e.stopPropagation()}>
+// 			<input
+// 				type='number'
+// 				value={(columnFilterValue as [number, number])?.[0] ?? ""}
+// 				onChange={(e) =>
+// 					column.setFilterValue((old: [number, number]) => [
+// 						e.target.value,
+// 						old?.[1],
+// 					])
+// 				}
+// 				placeholder={`Min`}
+// 				className='w-24 border rounded shadow'
+// 			/>
+// 			<input
+// 				type='number'
+// 				value={(columnFilterValue as [number, number])?.[1] ?? ""}
+// 				onChange={(e) =>
+// 					column.setFilterValue((old: [number, number]) => [
+// 						old?.[0],
+// 						e.target.value,
+// 					])
+// 				}
+// 				placeholder={`Max`}
+// 				className='w-24 border rounded shadow'
+// 			/>
+// 		</div>
+// 	) : (
+// 		<input
+// 			className='border rounded shadow w-36'
+// 			onChange={(e) => column.setFilterValue(e.target.value)}
+// 			onClick={(e) => e.stopPropagation()}
+// 			placeholder={`Search...`}
+// 			type='text'
+// 			value={(columnFilterValue ?? "") as string}
+// 		/>
+// 	);
+// }
 
 export default TableListOrder;

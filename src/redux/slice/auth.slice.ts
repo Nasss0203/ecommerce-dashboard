@@ -5,7 +5,7 @@ import { toast } from "sonner";
 
 export const authRegister = createAsyncThunk(
 	"auth/authRegister",
-	async (payload: IAuth, thunkAPI) => {
+	async (payload: IAuth) => {
 		const response = await register({ ...payload });
 		if (response) {
 			toast.success("Register successfully");
@@ -16,7 +16,7 @@ export const authRegister = createAsyncThunk(
 
 export const authLogin = createAsyncThunk(
 	"auth/authLogin",
-	async (payload: IAuth, thunkAPI) => {
+	async (payload: IAuth) => {
 		const response = await login({ ...payload });
 		return response;
 	},

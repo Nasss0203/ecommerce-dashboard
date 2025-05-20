@@ -45,7 +45,7 @@ const DialogProduct = () => {
 
 	const [uploadProgress, setUploadProgress] = useState(0);
 	const [fileUpload, setFileUpload] = useState<File | null>(null);
-	const srcFile = fileUpload ? URL.createObjectURL(fileUpload) : undefined;
+	// const srcFile = fileUpload ? URL.createObjectURL(fileUpload) : undefined;
 	const [multipleFiles, setMultipleFiles] = useState<File[]>([]);
 	const [previews, setPreviews] = useState<string[]>([]);
 
@@ -247,7 +247,6 @@ const DialogProduct = () => {
 																		{categorySelector.map(
 																			(
 																				item,
-																				index,
 																			) => (
 																				<SelectItem
 																					value={
@@ -295,7 +294,6 @@ const DialogProduct = () => {
 																		{brandSelector.map(
 																			(
 																				item,
-																				index,
 																			) => (
 																				<SelectItem
 																					value={
@@ -346,7 +344,7 @@ const DialogProduct = () => {
 										<FormField
 											control={form.control}
 											name='product_thumb'
-											render={({ field }) => (
+											render={() => (
 												<FormItem>
 													<FormLabel>
 														Image product

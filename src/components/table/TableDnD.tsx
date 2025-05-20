@@ -98,13 +98,13 @@ function TableDnD() {
 			},
 			{
 				accessorKey: "action",
-				cell: (info) => {
+				cell: () => {
 					return (
 						<Popover>
 							<PopoverTrigger>
-								<HiOutlineDotsHorizontal className='size-6' />
+								<HiOutlineDotsHorizontal className='size-6 ' />
 							</PopoverTrigger>
-							<PopoverContent align='start' className='w-40'>
+							<PopoverContent align='start' className='w-40 '>
 								Place here.z
 							</PopoverContent>
 						</Popover>
