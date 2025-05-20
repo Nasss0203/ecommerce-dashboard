@@ -54,7 +54,7 @@ const TableDraftDnD = () => {
 	const dispatch = useAppDispatch();
 	const data = useAppSelector((state) => state.product.listProduct);
 	const isPublish = useAppSelector((state) => state.product.isPublish);
-	const productData = data.data.data;
+	const productData = data?.data?.data || [];
 
 	useEffect(() => {
 		if (isPublish === true) {

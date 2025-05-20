@@ -10,16 +10,22 @@ import { IResponse } from "@/types/backend";
 import { IProduct } from "@/types/product";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "sonner";
+// types.ts hoặc trong cùng file
+interface FetchProductParams {
+	limit?: number;
+	page?: number;
+	// để lọc theo tab
+}
 
-export const fetchAllProducts = createAsyncThunk<IProduct[]>(
-	"product/fetchAllProduct",
-	async () => {
-		const response = await fetchAllProductsAPI();
-		console.log("response~fetchAllProducts", response);
-		const data = response || [];
-		return data;
-	},
-);
+export const fetchAllProducts = createAsyncThunk<
+	IProduct[],
+	FetchProductParams
+>("product/fetchAllProduct", async ({ limit = 10, page = 1 }) => {
+	const response = await fetchAllProductsAPI({ limit, page });
+
+	const data = response || [];
+	return data;
+});
 
 export const fetchAllDraftProduct = createAsyncThunk<IProduct[]>(
 	"product/fetchAllDraftProduct",

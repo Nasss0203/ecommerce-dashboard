@@ -55,7 +55,7 @@ const TablePublishDnD = () => {
 	const data = useAppSelector((state) => state.product.listProduct);
 	const isUnPublish = useAppSelector((state) => state.product.isUnPublish);
 
-	const productData = data.data.data;
+	const productData = data?.data?.data || [];
 
 	useEffect(() => {
 		if (isUnPublish === true) {

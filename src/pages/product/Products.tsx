@@ -1,11 +1,33 @@
 import { DialogProduct } from "@/components/dialog";
 import { TableDnD, TableDraftDnD, TablePublishDnD } from "@/components/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAppDispatch } from "@/redux/hooks";
+import {
+	fetchAllDraftProduct,
+	fetchAllProducts,
+	findAllPublishProduct,
+} from "@/redux/slice/product.slice";
 
 const Products = () => {
+	const dispatch = useAppDispatch();
+
+	const handleTabChange = (value: string) => {
+		if (value === "all") {
+			dispatch(fetchAllProducts());
+		} else if (value === "publish") {
+			dispatch(findAllPublishProduct());
+		} else if (value === "draft") {
+			dispatch(fetchAllDraftProduct());
+		}
+	};
+
 	return (
 		<div className='flex flex-col gap-6'>
-			<Tabs defaultValue='all' className='space-y-4'>
+			<Tabs
+				defaultValue='all'
+				className='space-y-4'
+				onValueChange={handleTabChange}
+			>
 				<div className='flex items-center justify-between'>
 					<TabsList>
 						<TabsTrigger value='all'>All</TabsTrigger>

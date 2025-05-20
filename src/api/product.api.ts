@@ -2,9 +2,20 @@ import { IProduct } from "@/types/product";
 import { getUserIdAndToken } from "@/utils";
 import axios from "../axios/axios";
 
-export const fetchAllProductsAPI = async () => {
+export const fetchAllProductsAPI = async ({
+	limit,
+	page,
+}: {
+	limit: number;
+	page: number;
+}) => {
 	try {
-		const response = await axios.get("/products");
+		const response = await axios.get("/products", {
+			params: {
+				limit,
+				page,
+			},
+		});
 		const data = response?.data;
 		return data;
 	} catch (error) {

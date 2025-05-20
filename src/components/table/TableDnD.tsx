@@ -19,9 +19,10 @@ import {
 import {
 	ColumnDef,
 	getCoreRowModel,
+	getPaginationRowModel,
 	useReactTable,
 } from "@tanstack/react-table";
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import DownloadCSV from "../csv/DownloadCSV";
 import { Button } from "../ui/button";
@@ -33,15 +34,23 @@ import DraggableTableHeader from "./drag/DraggableTableHeader";
 import { Product } from "./types/table.type";
 
 function TableDnD() {
+	const [pagination, setPagination] = useState({
+		pageIndex: 0, //initial page index
+		pageSize: 10, //default page size
+	});
+
 	const dispatch = useAppDispatch();
 	const listProduct = useAppSelector((state) => state.product.listProduct);
 
 	const data = listProduct?.data?.data || [];
-	console.log(" data~", data);
-
 	useEffect(() => {
-		dispatch(fetchAllProducts());
-	}, []);
+		dispatch(
+			fetchAllProducts({
+				limit: pagination.pageSize,
+				page: pagination.pageIndex + 1, // nếu backend page bắt đầu từ 1
+			}),
+		);
+	}, [dispatch, pagination.pageIndex, pagination.pageSize]);
 
 	const columns = useMemo<ColumnDef<Product>[]>(
 		() => [
@@ -126,23 +135,30 @@ function TableDnD() {
 		data,
 		columns,
 		getCoreRowModel: getCoreRowModel(),
+		getPaginationRowModel: getPaginationRowModel(),
 		state: {
 			columnOrder,
+			pagination,
 		},
 		onColumnOrderChange: setColumnOrder,
+		onPaginationChange: setPagination,
+		manualPagination: true,
+		pageCount:
+			Math.ceil((listProduct?.data?.total || 0) / pagination.pageSize) ||
+			1,
+		// hoặc nếu có totalPage: pageCount: listProduct?.data?.totalPage || 1,
 		debugTable: true,
 		debugHeaders: true,
 		debugColumns: true,
 	});
 
-	// reorder columns after drag & drop
 	function handleDragEnd(event: DragEndEvent) {
 		const { active, over } = event;
 		if (active && over && active.id !== over.id) {
 			setColumnOrder((columnOrder) => {
 				const oldIndex = columnOrder.indexOf(active.id as string);
 				const newIndex = columnOrder.indexOf(over.id as string);
-				return arrayMove(columnOrder, oldIndex, newIndex); //this is just a splice util
+				return arrayMove(columnOrder, oldIndex, newIndex);
 			});
 		}
 	}
@@ -154,7 +170,7 @@ function TableDnD() {
 	);
 
 	const resetTable = () => {
-		setColumnOrder(columns.map((c) => c.id!)); // Đặt lại thứ tự cột
+		setColumnOrder(columns.map((c) => c.id!));
 	};
 
 	return (
@@ -235,6 +251,53 @@ function TableDnD() {
 							</Table>
 						</div>
 					</div>
+				</div>
+				<div className='flex items-center gap-2 py-2'>
+					<Button
+						onClick={() => table.setPageIndex(0)}
+						disabled={!table.getCanPreviousPage()}
+					>
+						{"<<"}
+					</Button>
+					<Button
+						onClick={() => table.previousPage()}
+						disabled={!table.getCanPreviousPage()}
+					>
+						{"<"}
+					</Button>
+					<span>
+						Page{" "}
+						<strong>
+							{table.getState().pagination.pageIndex + 1} /{" "}
+							{table.getPageCount()}
+						</strong>
+					</span>
+					<Button
+						onClick={() => table.nextPage()}
+						disabled={!table.getCanNextPage()}
+					>
+						{">"}
+					</Button>
+					<Button
+						onClick={() =>
+							table.setPageIndex(table.getPageCount() - 1)
+						}
+						disabled={!table.getCanNextPage()}
+					>
+						{">>"}
+					</Button>
+					<select
+						value={table.getState().pagination.pageSize}
+						onChange={(e) => {
+							table.setPageSize(Number(e.target.value));
+						}}
+					>
+						{[10, 20, 30, 40, 50].map((pageSize) => (
+							<option key={pageSize} value={pageSize}>
+								{pageSize}
+							</option>
+						))}
+					</select>
 				</div>
 			</div>
 		</DndContext>
