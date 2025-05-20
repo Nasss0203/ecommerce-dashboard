@@ -13,7 +13,7 @@ const Products = () => {
 
 	const handleTabChange = (value: string) => {
 		if (value === "all") {
-			dispatch(fetchAllProducts());
+			dispatch(fetchAllProducts({}));
 		} else if (value === "publish") {
 			dispatch(findAllPublishProduct());
 		} else if (value === "draft") {
